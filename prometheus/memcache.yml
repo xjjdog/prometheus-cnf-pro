@@ -1,0 +1,12 @@
+[
+   {
+    "labels": {
+      "job": "mc001.server.ops.pro.ali.dc",
+      "instance": "memcache",
+      "dbname": "wd"
+    },
+    "targets": [
+      "10.44.24.66:9150"
+    ]
+   }
+]

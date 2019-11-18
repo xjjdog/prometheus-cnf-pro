@@ -1,0 +1,12 @@
+groups:
+    - name: memcache_storage
+      rules:
+      - alert: memcache内存使用率
+        expr: sum(memcached_current_bytes) by (dbname,job,instance)  / sum(memcached_limit_bytes) by (dbname,job,instance) * 100  > 80
+        for: 1m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.dbname }} 内存使用率 > 80% (当前值：{{ $value }}% )"
+

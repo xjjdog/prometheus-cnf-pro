@@ -1,0 +1,70 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.ym.163.com:25'
+  smtp_from: 'devops@sayhiai.com'
+  smtp_auth_username: 'devops@sayhiai.com'
+  smtp_auth_password: 'sayhiai'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 10m
+  receiver: 'pro'
+  routes:
+  - receiver: 'canal'
+    match:
+      alertname: 'canal 延迟'
+  - receiver: 'kafka'
+    match_re:
+      alertname: kafka 消费延迟|kafka_topic监控
+
+  - receiver:  'test'
+    match_re:
+      alertname: eurekaServer实例监控
+
+  #- receiver: 'wechat'
+  #  match_re:
+  #    alertname: '.*'
+        
+inhibit_rules:
+  - source_match: 
+      state: FIRING
+      topic: promotion.clearPromotionCache
+    target_match: 
+      topic: promotion.clearPromotionCache
+    equal: ['instance','job']
+
+receivers:
+- name: 'pro'
+  webhook_configs:
+  - url: 'http://10.81.28.227:8060/dingtalk/pro/send'
+
+- name: 'base'
+  webhook_configs:
+  - url: 'http://10.81.28.227:8060/dingtalk/base/send'
+
+- name: 'canal'
+  webhook_configs:
+  - url: 'http://10.81.28.227:8060/dingtalk/canal/send'
+
+- name: 'kafka'
+  webhook_configs:
+  - url: 'http://10.81.28.227:8060/dingtalk/kafka/send'
+
+- name: 'mail'
+  email_configs:
+  - to: 'huangxiangbo@dianxiaohuo.net'
+
+- name: 'test'
+  webhook_configs:
+  - url: 'http://10.81.28.227:8060/dingtalk/test/send'
+
+- name: 'wechat'
+  wechat_configs:
+  - send_resolved: true
+    to_party: '2'
+    agent_id: 1
+    corp_id: 'wxb3753345d418700d'
+    api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+    api_secret: 'dsklfdjslfkdsjflksdjflksdfjsl-B4'

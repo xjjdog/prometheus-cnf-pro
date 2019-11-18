@@ -1,0 +1,12 @@
+groups:
+    - name: eurekasever_client
+      rules:
+      - alert: eurekaServer实例监控
+        expr: eurekaServer_on_line_client < 1
+        for: 3m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.client }}实例已下线【开发环境测试数据】"
+

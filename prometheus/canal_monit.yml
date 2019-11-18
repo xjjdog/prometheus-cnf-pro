@@ -1,0 +1,11 @@
+groups:
+    - name: canal-delay
+      rules:
+      - alert: canal 延迟
+        expr: canal_instance_traffic_delay{instance="canal"} / 1000 > 300
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} {{$labels.destination}} 同步延迟 > 300s(当前值：{{ $value}}s)"

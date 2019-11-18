@@ -1,0 +1,67 @@
+# my global config
+global:
+  scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    #- targets:
+    - targets: ["110.81.228.227:9093"]
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "sys_monit.yml"
+  - "kafka_monit.yml"
+  - "canal_monit.yml"
+  - "memcache_monit.yml"
+  #- "eureka_monit.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+      labels:
+          group: "监控服务端"
+    
+  - job_name: 'system'  
+    file_sd_configs:  #通过文件去动态发现配置
+    - refresh_interval: 1m #默认5分钟检查一次
+      files:
+       - sys.yml #配置文件路径
+
+  - job_name: 'kafka'
+    file_sd_configs: 
+    - refresh_interval: 1m
+      files:
+       - kafka.yml 
+
+  - job_name: 'canal'
+    file_sd_configs:
+    - refresh_interval: 1m
+      files:
+       - canal.yml
+
+  - job_name: 'memcache'
+    file_sd_configs:
+    - refresh_interval: 1m
+      files:
+       - memcache.yml
+
+  - job_name: 'eurak'
+    metrics_path: '/eurekas/metrics'
+    file_sd_configs:
+    - refresh_interval: 1m
+      files:
+       - eureka.yml
+

@@ -1,0 +1,11 @@
+[
+   {
+    "labels": {
+      "job": "shop002.web.pub.pro.ali.dc",
+      "instance": "system"
+    },
+    "targets": [
+      "10.174.88.9:9100"
+    ]
+    }
+]

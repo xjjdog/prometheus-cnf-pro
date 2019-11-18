@@ -1,0 +1,11 @@
+[
+   {
+    "labels": {
+      "job": "canal001.server.pub.pro.ali.dc",
+      "instance": "canal"
+    },
+    "targets": [
+      "10.29.128.45:11122"
+    ]
+   }
+]

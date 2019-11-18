@@ -1,0 +1,12 @@
+[
+   {
+    "labels": {
+      "job": "kafka-databus",
+      "instance": "kafka"
+    },
+    "targets": [
+      "10.66.223.171:9308"
+    ]
+   }
+
+]

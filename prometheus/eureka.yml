@@ -1,0 +1,12 @@
+[
+   {
+    "labels": {
+      "job": "eureka",
+      "instance": "eureka"
+    },
+    "targets": [
+      "10.30.94.44:8103"
+    ]
+   },
+
+]

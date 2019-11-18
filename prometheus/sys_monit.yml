@@ -1,0 +1,80 @@
+groups:
+    - name: test-rule
+      rules:
+      - alert: 主机状态
+        expr: up == 0
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} agent"
+
+    - name: netstat-established
+      rules:
+      - alert: 主机连接数 tcp_established
+        expr: netstat_tcp_established > 1000
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} tcp_established > 1000(当前值：{{ $value}})"
+
+    - name: netstat_tcp_time_wait
+      rules:
+      - alert: 主机连接数 time_wait
+        expr: netstat_tcp_time_wait > 60000
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} time_wait > 60k(当前值：{{ $value}})"
+
+
+    - name: netstat-close_wait
+      rules:
+      - alert: 主机连接数 close_wait
+        expr: netstat_tcp_close_wait > 1000
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} tcp_established > 1000(当前值：{{ $value}})"
+
+    #流量监控
+    - name: nginx1
+      rules:
+      - alert: 主机带宽监控（100M）
+        expr: rate(net_bytes_sent{host="nginx001.server.ops.pro.ali.dc",interface="eth1"}[10s]) / 1024 / 1024 > 50
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} 当前外网流量使用率超过50%(当前值：{{ $value}})"
+
+    - name: task01-02
+      rules:
+      - alert: 主机带宽监控（5M）
+        expr: rate(net_bytes_sent{host="task001.web.pub.pro.ali.dc",interface="eth1"}[10s])  / 1024 / 1024 > 2  or rate(net_bytes_sent{host="task002.web.pub.pro.ali.dc",interface="eth1"}[10s])  / 1024 / 1024 > 4
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} 当前外网流量使用率超过80%(当前值：{{ $value}})"
+
+    - name: netstat_flow
+      rules:
+      - alert: 主机带宽监控（1M）
+        expr: rate(net_bytes_sent{host!="nginx001.server.ops.pro.ali.dc",host!="task001.web.pub.pro.ali.dc",host!="task002.web.pub.pro.ali.dc",interface="eth1"}[10s]) / 1024 / 1024 > 0.8
+        for: 5m
+        labels:
+          status: warning
+        annotations:
+          summary: "{{$labels.job}}"
+          description: "{{ $labels.instance }} 当前外网流量使用率超过80%(当前值：{{ $value}})"
+
